@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Brent's Audio Player Thingy</title>
+
+<style>
+/*
+	#div_audio {
+		width: 1024px;
+		margin: auto;
+	}
+	#the_audio {
+		width: 100%;
+	}
+	#the_audio_controls {
+		width: 1024px;
+		margin: auto;
+	}
+*/
+</style>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+</head>
+<body>
+
+	<div id="div_audio">
+		<audio id="the_audio" controls>
+			<source src="outfile.webm" type="audio/webm" />
+			<source src="outfile.ogg" type="audio/ogg" />
+			<source src="outfile.wav" type="audio/wav" />
+		</audio>
+	
+		<div id="the_audio_controls">Playback Speed: <input type="range" id="playbackSpeedRange" min="50" max="100" step="1" value="100"> <input type="text" id="displayPlaybackSpeed" value="100" size="2" onClick="this.value=''" />%
+			<a href="#" onClick="var bull = { keyCode: 105 }; keyWasPressed(bull);" title="shortcut: I"> IN</a> <input type="text" id="inpoint" value="0" size="2" onClick="this.value=''"> 
+			<a href="#" onClick="var bull = { keyCode: 111 }; keyWasPressed(bull);" title="shortcut: O"> OUT</a> <input type="text" id="outpoint" value="" size="2" onClick="this.value=''"> 
+			Loop <input type="checkbox" id="loop">
+		</div>
+	</div>
+	
+</body>
+
+<script> 
+
+document.getElementById('the_audio').addEventListener('loadedmetadata', function() { 
+	var dur = this.duration; 
+	tune = {
+		loop: false,
+		inpoint: 0,
+		outpoint: dur,
+		speed: 100,
+		pause: 2
+	}
+	updateView();
+});
+
+function updateView(){
+//	console.log('UPDATE VIEW');
+	$('#inpoint').val(tune.inpoint);
+	$('#outpoint').val(tune.outpoint);
+//	console.log(tune.loop);
+//	$('#loop').attr("checked",tune.loop); ...................don't know why jQuery isn't working for this one. using plain JS instead
+	document.getElementById('loop').checked = tune.loop;
+}
+
+window.addEventListener('keypress',keyWasPressed,false);
+document.getElementById('playbackSpeedRange').addEventListener('change',rangeChanged, false);
+
+function keyWasPressed(k){
+
+	var aud = document.getElementById('the_audio');
+
+	console.log("Key was pressed!!! " + k.keyCode);
+	switch (k.keyCode) {
+	case 105:				// i ..... inpoint
+	case 73: 				// I
+		tune.inpoint = aud.currentTime;
+		break;
+	case 111:   			// o ..... outpoint
+	case 79:    			// O
+		tune.outpoint = aud.currentTime;
+		break;
+	case 32:  				// space bar
+		aud.playing || !aud.paused ? aud.pause() : aud.play();
+		break;
+	case 108:
+	case 76:   				// loop
+		tune.loop == false ? tune.loop = true : tune.loop = false;
+		break;
+	case 13:    			// enter key
+		console.log(k.target.id);
+		if (k.target.id == "displayPlaybackSpeed") {
+			var spood = $('#displayPlaybackSpeed').val();
+			spood < 50 ? spood = 50 : spood = spood;
+			console.log("spood" + spood);
+			$('#displayPlaybackSpeed').val(spood);
+			$('#playbackSpeedRange').val(spood);
+			$('#displayPlaybackSpeed').blur();
+		}
+		break;
+		
+		
+	default:
+		console.log("not a key we care about");
+	}
+
+	updateView();
+}
+
+function rangeChanged(){
+	console.log('range changed');
+}
+
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
