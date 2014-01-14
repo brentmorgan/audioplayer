@@ -53,6 +53,18 @@ document.getElementById('the_audio').addEventListener('loadedmetadata', function
 		pause: 2
 	}
 	updateView();
+
+	function loopy(){				// this is inside here because it can only start once the audio is fully loaded and defined etc...
+		setTimeout(loopy,20);
+		var aud = document.getElementById('the_audio');
+		ct = aud.currentTime;
+		if (ct >= tune.outpoint) {
+			aud.currentTime = tune.inpoint;
+		}
+	}
+
+	loopy();		// start checking the time for loopyness!!
+	
 });
 
 function updateView(){
@@ -69,6 +81,8 @@ document.getElementById('playbackSpeedRange').addEventListener('change',rangeCha
 
 function keyWasPressed(k){
 
+	var update = true;
+	
 	var aud = document.getElementById('the_audio');
 
 	console.log("Key was pressed!!! " + k.keyCode);
@@ -76,10 +90,12 @@ function keyWasPressed(k){
 	case 105:				// i ..... inpoint
 	case 73: 				// I
 		tune.inpoint = aud.currentTime;
+		tune.outpoint < tune.inpoint ? tune.outpoint = aud.duration : 1;
 		break;
 	case 111:   			// o ..... outpoint
 	case 79:    			// O
 		tune.outpoint = aud.currentTime;
+		tune.inpoint > tune.outpoint ? tune.inpoint = 0 : 1;
 		break;
 	case 32:  				// space bar
 		aud.playing || !aud.paused ? aud.pause() : aud.play();
@@ -106,9 +122,12 @@ function keyWasPressed(k){
 		
 	default:
 		console.log("not a key we care about");
+		update = false;
 	}
 
-	updateView();
+	if (update){
+		updateView();
+	}
 }
 
 function rangeChanged(){
@@ -117,6 +136,11 @@ function rangeChanged(){
 	//$('#the_audio').attr('playbackRate', $('playbackSpeedRange').val()/100);
 	document.getElementById('the_audio').playbackRate = $('#playbackSpeedRange').val()/100;
 }
+
+
+
+
+
 
 </script>
 </html>
