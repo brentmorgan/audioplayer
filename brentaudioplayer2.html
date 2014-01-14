@@ -60,8 +60,7 @@ function updateView(){
 	$('#inpoint').val(tune.inpoint);
 	$('#outpoint').val(tune.outpoint);
 //	console.log(tune.loop);
-//	$('#loop').attr("checked",tune.loop); ...................don't know why jQuery isn't working for this one. using plain JS instead
-	document.getElementById('loop').checked = tune.loop;
+	$('#loop').prop("checked",tune.loop); // apparently you have to use prop() instead of attr() for some shit like form elements. awesome.
 }
 
 window.addEventListener('keypress',keyWasPressed,false);
@@ -118,12 +117,7 @@ function rangeChanged(){
 	//$('#the_audio').attr('playbackRate', $('playbackSpeedRange').val()/100);
 	document.getElementById('the_audio').playbackRate = $('#playbackSpeedRange').val()/100;
 }
-/*
-function setLoop(){
-	document.getElementById('the_audio').loop = tune.loop;
-	// I would set this in the onClick event but you can also loop/unoop with keyboard shortcut, so this should fire for either
-}
-*/
+
 </script>
 </html>
 
