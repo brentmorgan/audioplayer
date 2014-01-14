@@ -35,7 +35,7 @@
 		<div id="the_audio_controls">Playback Speed: <input type="range" id="playbackSpeedRange" min="50" max="100" step="1" value="100"> <input type="text" id="displayPlaybackSpeed" value="100" size="2" onClick="this.value=''" />%
 			<a href="#" onClick="var bull = { keyCode: 105 }; keyWasPressed(bull);" title="shortcut: I"> IN</a> <input type="text" id="inpoint" value="0" size="2" onClick="this.value=''"> 
 			<a href="#" onClick="var bull = { keyCode: 111 }; keyWasPressed(bull);" title="shortcut: O"> OUT</a> <input type="text" id="outpoint" value="" size="2" onClick="this.value=''"> 
-			Loop <input type="checkbox" id="loop">
+			Loop <input type="checkbox" id="loop" onClick="var bull = { keyCode: 108 }; keyWasPressed(bull); this.blur();">
 		</div>
 	</div>
 	
@@ -66,6 +66,7 @@ function updateView(){
 
 window.addEventListener('keypress',keyWasPressed,false);
 document.getElementById('playbackSpeedRange').addEventListener('change',rangeChanged, false);
+//document.getElementById('loop').addEventListener('change',setLoop,false);
 
 function keyWasPressed(k){
 
@@ -87,6 +88,7 @@ function keyWasPressed(k){
 	case 108:
 	case 76:   				// loop
 		tune.loop == false ? tune.loop = true : tune.loop = false;
+		aud.loop = tune.loop;
 		break;
 	case 13:    			// enter key
 		console.log(k.target.id);
@@ -97,6 +99,8 @@ function keyWasPressed(k){
 			$('#displayPlaybackSpeed').val(spood);
 			$('#playbackSpeedRange').val(spood);
 			$('#displayPlaybackSpeed').blur();
+			
+			aud.playbackRate = spood/100;
 		}
 		break;
 		
@@ -111,8 +115,15 @@ function keyWasPressed(k){
 function rangeChanged(){
 	console.log('range changed');
 	$('#displayPlaybackSpeed').val($('#playbackSpeedRange').val());
+	//$('#the_audio').attr('playbackRate', $('playbackSpeedRange').val()/100);
+	document.getElementById('the_audio').playbackRate = $('#playbackSpeedRange').val()/100;
 }
-
+/*
+function setLoop(){
+	document.getElementById('the_audio').loop = tune.loop;
+	// I would set this in the onClick event but you can also loop/unoop with keyboard shortcut, so this should fire for either
+}
+*/
 </script>
 </html>
 
