@@ -117,6 +117,18 @@ function keyWasPressed(k){
 			
 			aud.playbackRate = spood/100;
 		}
+		
+		/*else if (k.target.id == "inpoint") {
+			tune.inpoint = $('#inpoint').val();
+			aud.currentTime < tune.inpoint ? aud.currentTime = tune.inpoint : 1;
+		} else if (k.target.id == "outpoint") {
+			tune.outpoint = $('#outpoint').val();
+			if (aud.currentTime > tune.outpoint) {
+				aud.pause();
+				aud.currentTime = tune.outpoint;
+			}
+			//aud.currentTime > tune.outpoint ? aud.pause(); aud.currentTime = tune.outpoint : 1;
+		}	*/
 		break;
 		
 		
