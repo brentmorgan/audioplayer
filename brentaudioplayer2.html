@@ -32,10 +32,11 @@
 			<source src="outfile.wav" type="audio/wav" />
 		</audio>
 	
-		<div id="the_audio_controls">Playback Speed: <input type="range" id="playbackSpeedRange" min="50" max="100" step="1" value="100"> <input type="text" id="displayPlaybackSpeed" value="100" size="2" onClick="this.value=''" />%
+		<div id="the_audio_controls">Playback Speed: <input type="range" id="playbackSpeedRange" min="50" max="100" step="1" value="100" /> <input type="text" id="displayPlaybackSpeed" value="100" size="2" onClick="this.value=''" />%
 			<a href="#" onClick="var bull = { keyCode: 105 }; keyWasPressed(bull);" title="shortcut: I"> IN</a> <input type="text" id="inpoint" value="0" size="2" onClick="this.value=''"> 
 			<a href="#" onClick="var bull = { keyCode: 111 }; keyWasPressed(bull);" title="shortcut: O"> OUT</a> <input type="text" id="outpoint" value="" size="2" onClick="this.value=''"> 
 			Loop <input type="checkbox" id="loop" onClick="var bull = { keyCode: 108 }; keyWasPressed(bull); this.blur();">
+			Delay <input type="range" id="delayRange" min="0" max="10" step="1" value="0" /> <input type="text" id="displayDelay" value="0" size="1" onClick="this.value=''" /> sec.
 		</div>
 	</div>
 	
@@ -50,7 +51,7 @@ document.getElementById('the_audio').addEventListener('loadedmetadata', function
 		inpoint: 0,
 		outpoint: dur,
 		speed: 100,
-		pause: 2
+		delay: 2
 	}
 	updateView();
 
@@ -60,12 +61,26 @@ document.getElementById('the_audio').addEventListener('loadedmetadata', function
 		ct = aud.currentTime;
 		if (ct >= tune.outpoint) {
 			aud.currentTime = tune.inpoint;
+			aud.pause();
+			tune.loop? playAfterPause(aud) : 1; 
 		}
 	}
 
 	loopy();		// start checking the time for loopyness!!
-	
+/*	
+	function playAfterPause(){
+		document.getElementById('the_audio').play();
+	}
+*/	
 });
+
+function playAfterPause(aud){
+//	aud = document.getElementById('the_audio');
+	aud.pause();
+	setTimeout(function(){aud.play()}, tune.delay*1000);
+	
+	
+}
 
 function updateView(){
 //	console.log('UPDATE VIEW');
@@ -73,11 +88,13 @@ function updateView(){
 	$('#outpoint').val(tune.outpoint);
 //	console.log(tune.loop);
 	$('#loop').prop("checked",tune.loop); // apparently you have to use prop() instead of attr() for some shit like form elements. awesome.
+	$('#delayRange').val(tune.delay);
+	$('#displayDelay').val(tune.delay);
 }
 
 window.addEventListener('keypress',keyWasPressed,false);
 document.getElementById('playbackSpeedRange').addEventListener('change',rangeChanged, false);
-//document.getElementById('loop').addEventListener('change',setLoop,false);
+document.getElementById('delayRange').addEventListener('change',delayChanged, false);
 
 function keyWasPressed(k){
 
@@ -98,7 +115,7 @@ function keyWasPressed(k){
 		tune.inpoint > tune.outpoint ? tune.inpoint = 0 : 1;
 		break;
 	case 32:  				// space bar
-		aud.playing || !aud.paused ? aud.pause() : aud.play();
+		aud.playing || !aud.paused ? aud.pause() : playAfterPause(aud); //aud.play();
 		break;
 	case 108:
 	case 76:   				// loop
@@ -118,19 +135,28 @@ function keyWasPressed(k){
 			aud.playbackRate = spood/100;
 		}
 		
-		/*else if (k.target.id == "inpoint") {
+		else if (k.target.id == "inpoint") {
 			tune.inpoint = $('#inpoint').val();
 			aud.currentTime < tune.inpoint ? aud.currentTime = tune.inpoint : 1;
+			$('#inpoint').blur();
 		} else if (k.target.id == "outpoint") {
 			tune.outpoint = $('#outpoint').val();
 			if (aud.currentTime > tune.outpoint) {
 				aud.pause();
 				aud.currentTime = tune.outpoint;
 			}
+			$('#outpoint').blur();
 			//aud.currentTime > tune.outpoint ? aud.pause(); aud.currentTime = tune.outpoint : 1;
-		}	*/
-		break;
+		} else if (k.target.id == "displayDelay") {
+			var spood = $('#displayDelay').val();
+			$('#delayRange').val(spood);
+			$('#displayDelay').blur();
+			tune.delay = spood;
+		}	
 		
+		
+		
+		break;
 		
 	default:
 		console.log("not a key we care about");
@@ -149,7 +175,11 @@ function rangeChanged(){
 	document.getElementById('the_audio').playbackRate = $('#playbackSpeedRange').val()/100;
 }
 
-
+function delayChanged() {
+	console.log('delay changed');
+	$('#displayDelay').val($('#delayRange').val());
+	tune.delay = $('#delayRange').val();
+}
 
 
 
