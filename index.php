@@ -17,9 +17,20 @@
 
 	<div id="div_audio">
 		<audio id="the_audio" controls>
-			<source src="outfile.webm" type="audio/webm" />
-			<source src="outfile.ogg" type="audio/ogg" />
-			<source src="outfile.wav" type="audio/wav" />
+			<?php
+			$tune_name = "track";	/* ************************************** this needs to come out and become dynamiccccc **** */
+			$exts = array("aiff", "webm", "ogg", "wav", "mp3");		// possible file extensions
+			foreach ($exts as $ext) {
+				if (file_exists("audio/" . $tune_name . "." . $ext)) {
+					echo "<source src='audio/" . $tune_name . "." . $ext . "' type='audio/" . $ext . "' />";
+				}
+			}
+			?>
+			<!--
+			<source src="audio/track.webm" type="audio/webm" />
+			<source src="audio/track.ogg" type="audio/ogg" />
+			<source src="audio/track.wav" type="audio/wav" />
+				-->
 		</audio>
 	
 		<div id="the_audio_controls">Playback Speed: <input type="range" id="playbackSpeedRange" min="50" max="100" step="1" value="100" /> <input type="text" id="displayPlaybackSpeed" value="100" size="2" onClick="this.value=''" />%
@@ -34,17 +45,9 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+	<script>
+		tuneplayer();
+	</script>
 
 </body>
 </html>
