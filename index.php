@@ -1,4 +1,13 @@
+<?php
+session_start();
+/*
+if (!$_SESSION['isloggedin']) {
+	header('Location: login.php');
+}
+*/
+$un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,6 +21,18 @@
 
 </head>
 <body>
+	
+	<div id="welcome">
+		Welcome, 
+		<?php
+		echo $un;
+		if ($_SESSION['isloggedin']) {
+			echo " <a href='kill.php'>logout</a>";
+		} else {
+			echo " <a href='login.php'>login</a>";
+		}
+		?>
+	</div>
 
 <!-- ******************************* Audio player and controlls ************************* -->
 
