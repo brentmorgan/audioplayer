@@ -1,5 +1,29 @@
+/*
+Colors from Jeanne's CAOIM page:
+background (grey/blueish):		#4D5660
+Yellowy :						#EDC845
+Tan (parchment):				#E9E7DB
+*/
+
 body {
-	
+	background-color:	#4D5660;
+	color:				#fff;
+	font-family: 		sans-serif;
+}
+
+a, a:visited {
+	color:				#EDC845;
+	text-decoration:	none;
+}
+
+a:hover {
+	text-decoration: 	underline;
+}
+
+h2 {
+	letter-spacing: 	3px;
+	text-shadow: 		2px 3px 1px rgba(220, 220, 220, 1);
+	font-family:		serif;
 }
 
 #div_audio {
@@ -26,4 +50,31 @@ body {
 
 #countdown {
 	
+}
+
+
+/* ************ upload.php ********** */
+
+#instructions_text {
+						width:600px;
+}
+
+.italic {
+						font-style: italic;
+						color: #ccc;
+}
+
+.code {
+						background-color: #EDC845;
+						font-family: monospace;
+						padding: 5px;
+						width: auto;
+}
+
+.important {
+						font-weight: bold;
+						color: #f00;
+						letter-spacing: 3px;
+						font-family: serif;
+						text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
 }

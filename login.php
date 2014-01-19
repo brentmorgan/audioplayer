@@ -39,19 +39,18 @@ $_SESSION['loc'] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 
 	}
 	</style>
 	
+	<link href="tuneplayer.css" rel="stylesheet" type="text/css" />
+	
 </head>
 <body onLoad="document.getElementById('un').focus()">
 	
 <div id='box'>
 	<form method="POST">
-	<p>email: <input type='text' name='un' id='un' /></p>
+	<p>&nbsp; &nbsp; &nbsp; email: <input type='text' name='un' id='un' /></p> <!-- sorry this is REALLY LAME but i wanted them to line up and I am lazy -->
 	<p>password: <input type='password' name='pw' /></p>
 	<input type='submit' />
 </form>
 </div>
-
-
-
 
 </body>
 </html>

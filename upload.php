@@ -1,53 +1,33 @@
+<?php
+session_start();
+($_SESSION['isloggedin'] && $_SESSION['can_upload']) ? 1 : header('Location: index.php');
+?>
 <!doctype html>
 <html>
 <head>
-	<title>Brent Tune Player Thingy</title>
-
-	<style type="text/css">
-	#box {
-		border: 1px solid #000;
-		padding: 10px;
-	}
-	</style>
+	<title>Brent Tune Player Thingy - File Upload</title>
 	
-	<?php
-		
-	if ($_POST){
-		$un = $_POST['un'];
-		$pw = $_POST['pw'];
-		
-		include('db_connect.php');
-		$sql = "SELECT * FROM tp_users WHERE email = '" . $un . "' AND password = '" . $pw . "' AND can_upload";
-		$result = mysql_query($sql,$conn) or print "Oh No something went wrong with the query. " . mysql_error();
-		include('db_close');
-		
-		if (mysql_num_rows($result)) {
-			$isloggedin = true;
-		} else {
-			$isloggedin = false;
-		}
-	}
-		
-	?>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="tuneplayer.js"></script>	<!-- ****************** Not sure we'll need this on this page???? ****** -------->
 
+	<link href="tuneplayer.css" rel="stylesheet" type="text/css" />
+	
 </head>
-<body>
+<body onLoad="$('#instructions_text').hide()">
 	
-<?php
-if (!$loggedin) {
-	echo "<div id='box'>
-		<p>email: <input type='text' name='un' /></p>
-		<p>password: <input type='text' name='pw' /></p>
-		<input type='submit' />
-	</div>";
-} else {
-	;
-}
-?>
-<div>
-<a href="login.php">login</a>
-</div>
-
+	<h2>File Upload</h2>
+	<div id="instructions">
+		<a href="#" onClick="$('#instructions_text').toggle('slow')">Instructions</a>
+		<div id="instructions_text">
+			<p class="italic">For best compatibility across browsers and devices it is advisable to upload several different versions of each audio file in different codecs. Simple transcoding can be done via the command line in a Terminal window using FFMPEG as follows:</p>
+			<div class="code">ffmpeg -i [filename].[extension] [filename].[newextension]</div>
+				Where [filename] is the name of your original file, [extension] is its file extension, and [newextension] is the file extension of the format you are converting to. For example if you have an existing AIFF file called myTune.aiff you could use
+				<div class="code">ffmpeg -i myTune.aiff myTune.m4a</div>
+				to create a new file in M4A format.
+				<p>For best results upload files in these formats:</p>
+				<p>aiff<br/>wav<br/>ogg<br/>webm<br/>m4a</p>
+				<p class="important">Note that all versions of a particular recording must be uploaded at once, or else they will be considred a different tune, not different formats of the same recording.</p>
+		</div>
 
 </body>
 </html>

@@ -1,10 +1,6 @@
 <?php
 session_start();
-/*
-if (!$_SESSION['isloggedin']) {
-	header('Location: login.php');
-}
-*/
+
 $un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 
 ?>
@@ -27,7 +23,10 @@ $un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 		<?php
 		echo $un;
 		if ($_SESSION['isloggedin']) {
-			echo " <a href='kill.php'>logout</a>";
+			echo " <a href='kill.php'>logout</a> ";
+			if ($_SESSION['can_upload']) {
+				echo " <a href='upload.php'>upload</a> "; 
+			}
 		} else {
 			echo " <a href='login.php'>login</a>";
 		}
