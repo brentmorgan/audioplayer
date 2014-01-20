@@ -65,6 +65,11 @@ function tuneplayer() {
 
 	function keyWasPressed(k){
 
+		if (k.target.id == "input_tag") {	// !!!!!! If they're typing in an input field we don't want to activate the audio
+		console.log('RETURN');
+			return;							// player controls! (like if they type fLute we don't want LOOP to turn on & off)
+		}
+
 		var update = true;
 	
 		var aud = document.getElementById('the_audio');
@@ -148,5 +153,14 @@ function tuneplayer() {
 		tune.delay = $('#delayRange').val();
 	}
 
-
 }
+
+function sharedFunctions() {
+//	$('input:text').addClass('default');
+//	$('input:text').focus(function() { this.value=''; /* console.log(this); console.log($(this)); */ $(this).removeClass('default'); });
+
+	$('.userInput').focus(function() { this.value=''; /* console.log(this); console.log($(this)); */ $(this).removeClass('userInput'); });
+}
+
+
+
