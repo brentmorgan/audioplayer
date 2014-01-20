@@ -18,6 +18,8 @@ $un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 </head>
 <body>
 	
+	<h2 id="top_title">Brent's Tune Player Thingy</h2>
+	
 	<div id="welcome">
 		Welcome, 
 		<?php
@@ -31,6 +33,31 @@ $un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 			echo " <a href='login.php'>login</a>";
 		}
 		?>
+	</div>
+	
+	<!-- **************************** Choose Tune Here ********************************* -->
+	
+	<div id="chooser">
+		
+		<h3 title="wut?" style="cursor:help" onClick="$('#wut_recent').toggle('slow')">Recent Tunes:</h3>
+		<div id="wut_recent" style="display:none">
+			The most recent tune uploaded to the database will show up here by default. You can move backwards (and forwards when available) in time by clicking the "Prev" and "Next" buttons. The date displayed is the the date the recording was made, or if unavailable is the date the recording was uploaded to the database.
+		</div>
+		
+		<span id="recent_tunes">
+			<button id="prev" onClick="#">previous</button> <button id="current_tune" onClick="#">TUNE??</button> <span id="tune_date"><!-- dynamically filled --></span> <button id="next" onClick="#">next</button>
+		</span>
+
+		
+		<h3 title="wut?" style="cursor:help" onClick="$('#wut_tags').toggle('slow')">Tunes by Tags:</h3>
+		
+		<div id="wut_tags" style="display:none">
+			Enter 'tags' or 'keywords' here to search for particular tunes or types of tunes. If you are logged in you can also add your own custom tags to tunes. Examples of tags are things like 'fiddle', 'jig', 'jeanne freeman', 'variations', or pretty much anything else you can think of that might apply to a tune. You can combine multiple tags to create more refined search results; for instance using 'fiddle' and 'reel' should get you more focussed results than just 'fiddle' or 'reel' alone.
+		</div>
+		
+		<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags()" /> <span id="tags_list"><!-- dynamic --></span>
+		<button id="add_tag" onClick="#">Add</button> <button id="search_tags" onClick="#">Search</button>
+		
 	</div>
 
 <!-- ******************************* Audio player and controlls ************************* -->
@@ -67,6 +94,17 @@ $un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 
 	<script>
 		tuneplayer();
+		sharedFunctions();
+		$('#search_tags').attr('disabled', 'disbled');
+		$('#next').attr('disabled', 'disabled');
+		$('#add_tag').attr('disabled', 'disabled');
+		
+		function typing_in_tags() {
+			var l = $('#input_tag').val().length;
+			console.log(l);
+			$('#add_tag').attr('disabled', false);
+			$('#search_tags').attr('disabled', false);
+		}
 	</script>
 
 </body>
