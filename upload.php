@@ -15,7 +15,6 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 	if (strlen($_FILES['audio1']['name']) == 0 ) {
 		$error_audio1 = "<span class='important'>ERROR: You must select at least one audio file to upload.</span>";
 		$info_is_good = false;
-		var_dump($_FILES);
 	}
 	
 	/* *************************** Upload audio files to temp directory, while checking for errors ***************************** */
@@ -45,9 +44,11 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 		if ($_POST['instrument'] == 'Instrument') { $_POST['instrument'] = ''; }
 		if ($_POST['type'] == 'Tune Type') { $_POST['type'] = ''; }
 		if ($_POST['date'] == 'Recorded Date' || $_POST['date'] == '') {
-			$date = date('m/d/Y');	// this is backwards or something......? But it works for some reason????
-		} else {
+			$date = date('Y-d-m');
+		} else {						// mySQL dates go YYYY-MM-DD, but somehow it seems the MM and DD need to be reversed????
 			$date = $_POST['date'];
+			$date_parts = explode("/", $date);
+			$date = $date_parts[2] . "-" . $date_parts[0] . "-" . $date_parts[1];
 		}
 		
 		$sql = "INSERT INTO tp_tunes (tune_title, tune_player, tune_instrument, tune_type, tune_date) VALUES ('" . $_POST['title'] . "', '" . $_POST['player'] . "', '". $_POST['instrument'] . "', '" . $_POST['type'] . "', '" . $date . "')";
@@ -56,7 +57,7 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 		$tune_id = mysql_insert_id();
 		
 		foreach ($saved_audio as $file) {
-			move_uploaded_file($file['loc'], "audio/" . $tune_id . "." . $file['ext']) or print "Balls. Error moving temp audio file audio directory. Sad face. " . $file;
+			move_uploaded_file($file['loc'], "audio/" . $tune_id . "." . $file['ext']) or print "Balls. Error moving temp audio file to audio directory. Sad face. " . $file;
 		}
 		
 		include('db_close.php');
