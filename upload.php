@@ -4,7 +4,7 @@ session_start();
 
 if ($_POST) {	/* ******************** PROECESS FORM ************************** */
 	
-	$notice = "<div class='important'>"; // for displaying random error messages and upload status
+	$notice = "<div class='important'>"; // for displaying error messages and/or upload status
 	
 	$info_is_good = true;
 	//					Validate form info here.....
@@ -39,7 +39,7 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 	if ($info_is_good) {
 
 		// ***************** Update the DB here *************************
-	//	include('db_connect.php');
+		include('db_connect.php');
 	
 		if ($_POST['player'] == 'Player') { $_POST['player'] = ''; }
 		if ($_POST['instrument'] == 'Instrument') { $_POST['instrument'] = ''; }
@@ -50,14 +50,16 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 			$date = $_POST['date'];
 		}
 		
-		$sql = "INSERT INTO tp_tunes ('tp_title', 'tp_player', 'tp_instument', 'tp_type', 'tp_date') VALUES ('" . $_POST['title'] . "', '" . $_POST['player'] . "', '". $_POST['instrument'] . "', '" . $_POST['type'] . "', '" . $date . "')";
+		$sql = "INSERT INTO tp_tunes (tune_title, tune_player, tune_instrument, tune_type, tune_date) VALUES ('" . $_POST['title'] . "', '" . $_POST['player'] . "', '". $_POST['instrument'] . "', '" . $_POST['type'] . "', '" . $date . "')";
+		$ins = mysql_query($sql, $conn) or print "Oh boy something went wrong with inserting tune info! " . mysql_error() . "<br/>";
 		
+		$tune_id = mysql_insert_id();
 		
-		// After updating the database we need to use the ID of the new entry to name the audio files and move them into the right directory.
-		// So the first file that gets uploaded with an id of "0" will need to have the audio files called "0.m4a" or "0.wav" or whatever
-		// eventually we'll have files like "4593534.aiff", "4593534.webm", "4593534.ogg" etc......
+		foreach ($saved_audio as $file) {
+			move_uploaded_file($file['loc'], "audio/" . $tune_id . "." . $file['ext']) or print "Balls. Error moving temp audio file audio directory. Sad face. " . $file;
+		}
 		
-	//	include('db_close.php');
+		include('db_close.php');
 	}
 	
 	$notice .="</div>";
