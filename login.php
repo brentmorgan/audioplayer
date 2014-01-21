@@ -6,13 +6,14 @@ if ($_POST){
 	$pw = $_POST['pw'];
 	
 	include('db_connect.php');
-	$sql = "SELECT name, email, can_upload FROM tp_users WHERE email = '" . $un . "' AND password = '" . $pw . "'";
+	$sql = "SELECT id, name, email, can_upload FROM tp_users WHERE email = '" . $un . "' AND password = '" . $pw . "'";
 	$result = mysql_query($sql,$conn) or print "Oh No something went wrong with the query. " . mysql_error();
 	include('db_close');
 	
 	if (mysql_num_rows($result)) {
 		$_SESSION['isloggedin'] = true;
 		$row = mysql_fetch_assoc($result);
+		$_SESSION['user_id'] = $row['id'];
 		$_SESSION['nickname'] = $row['name'];
 		$_SESSION['email'] = $row['email'];
 		$_SESSION['can_upload'] = $row['can_upload'];
