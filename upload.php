@@ -33,8 +33,6 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 		}
 	}
 	
-	//				No errors. let us proceed --------!!!!!!!
-	
 	if ($info_is_good) {
 
 		// ***************** Update the DB here *************************
@@ -59,6 +57,17 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 		foreach ($saved_audio as $file) {
 			move_uploaded_file($file['loc'], "audio/" . $tune_id . "." . $file['ext']) or print "Balls. Error moving temp audio file to audio directory. Sad face. " . $file;
 		}
+		
+		/* Tags */
+		
+		$tags = $_POST['title'];
+		if ($_POST['player'] != '') { $tags .= "," . $_POST['player']; }
+		if ($_POST['instrument'] != '') { $tags .= "," . $_POST['instrument']; }
+		if ($_POST['type'] != '') { $tags .= "," . $_POST['type']; }
+		$tags .= "," . $_POST['tags'];
+		
+		$sql = "INSERT INTO tp_tags (tags_tune_id, tags_user_id, tags_tag) VALUES ( " . $tune_id . ", " . $_SESSION['user_id'] . ", '" . $tags . "')";
+		$ins = mysql_query($sql,$conn) or print "Aw man something went wrong with tha muthafuckin tags. " . mysql_error();
 		
 		include('db_close.php');
 	}
@@ -116,6 +125,11 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 			<input type="text" name="instrument" id="instrument" value="Instrument" class="userInput" /><br />
 			<input type="text" name="type" id="type" value="Tune Type" class="userInput" /><br />
 			<input type="text" name="date" id="datepicker" value="Recorded Date" class="userInput" /><br />
+		</p>
+		
+		<h3>tags</h3>
+		<p>
+			<input type="text" name="tags" id="tags" value="Comma-delimited please!" class="userInput" size="50" />
 		</p>
 	
 		<h3>audio files</h3>
