@@ -3,6 +3,18 @@ session_start();
 
 $un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 
+$_GET['tune_date'] ? $tune_date = $_GET['tune_date'] : $tune_date = date('Y-d-m'); 	// why are d and m backwards???
+include('db_connect.php');
+$sql = "SELECT * FROM tp_tunes WHERE tune_date <= '" . $tune_date . "' ORDER BY tune_date DESC LIMIT 1";
+$result = mysql_query($sql,$conn) or print "Balls dude, problems. " . mysql_error();
+include('db_close');
+
+$row = mysql_fetch_assoc($result);
+
+$tune_id = $row['tune_id'];
+$tune_title = $row['tune_title'];
+$tune_date = $row['tune_date'];
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -45,7 +57,7 @@ $un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 		</div>
 		
 		<span id="recent_tunes">
-			<button id="prev" onClick="#">previous</button> <button id="current_tune" onClick="#">TUNE??</button> <span id="tune_date"><!-- dynamically filled --></span> <button id="next" onClick="#">next</button>
+			<button id="prev" onClick="#">prev</button> <span id="tune_title"><?php echo $tune_title; ?></span> <span id="tune_date"><?php echo $tune_date; ?></span> <button id="next" onClick="#">next</button>
 		</span>
 
 		
@@ -65,11 +77,23 @@ $un = $_SESSION['isloggedin'] ? $_SESSION['nickname'] : "Guest";
 	<div id="div_audio">
 		<audio id="the_audio" controls>
 			<?php
-			$tune_name = "track";	/* ************************************** this needs to come out and become dynamiccccc **** */
+/*			
+			$_GET['tune_date'] ? $tune_date = $_GET['tune_date'] : $tune_date = date('Y-d-m'); 	// why are d and m backwards???
+			include('db_connect.php');
+			$sql = "SELECT * FROM tp_tunes WHERE tune_date <= '" . $tune_date . "' ORDER BY tune_date DESC LIMIT 1";
+			$result = mysql_query($sql,$conn) or print "Balls dude, problems. " . mysql_error();
+			include('db_close');
+			
+			$row = mysql_fetch_assoc($result);
+			
+			$tune_id = $row['tune_id'];
+			$tune_title = $row['tune_title'];
+*/
+			//$tune_name = "track";	/* ************************************** this needs to come out and become dynamiccccc **** */
 			$exts = array("aiff", "webm", "ogg", "wav", "mp3");		// possible file extensions
 			foreach ($exts as $ext) {
-				if (file_exists("audio/" . $tune_name . "." . $ext)) {
-					echo "<source src='audio/" . $tune_name . "." . $ext . "' type='audio/" . $ext . "' />";
+				if (file_exists("audio/" . $tune_id . "." . $ext)) {
+					echo "<source src='audio/" . $tune_id . "." . $ext . "' type='audio/" . $ext . "' />";
 				}
 			}
 			?>
