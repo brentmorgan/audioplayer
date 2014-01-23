@@ -41,7 +41,7 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 		if ($_POST['player'] == 'Player') { $_POST['player'] = ''; }
 		if ($_POST['instrument'] == 'Instrument') { $_POST['instrument'] = ''; }
 		if ($_POST['type'] == 'Tune Type') { $_POST['type'] = ''; }
-		if ($_POST['date'] == 'Recorded Date' || $_POST['date'] == '') {
+		if ($_POST['datepicker'] == 'Recorded Date' || $_POST['datepicker'] == '') {
 			$date = date('Y-d-m');
 		} else {						// mySQL dates go YYYY-MM-DD, but somehow it seems the MM and DD need to be reversed????
 			$date = $_POST['date'];
