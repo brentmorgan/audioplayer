@@ -67,8 +67,10 @@ $tune_date = $row['tune_date'];
 			Enter 'tags' or 'keywords' here to search for particular tunes or types of tunes. If you are logged in you can also add your own custom tags to tunes. Examples of tags are things like 'fiddle', 'jig', 'jeanne freeman', 'variations', or pretty much anything else you can think of that might apply to a tune. You can combine multiple tags to create more refined search results; for instance using 'fiddle' and 'reel' should get you more focussed results than just 'fiddle' or 'reel' alone.
 		</div>
 		
-		<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags()" /> <span id="tags_list"><!-- dynamic --></span>
-		<button id="add_tag" onClick="#">Add</button> <button id="search_tags" onClick="#">Search</button>
+		<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags()" /> 
+		<button id="add_tag" onClick="add_tag()">Add</button> <button id="search_tags" onClick="search_tags()">Search</button>
+		<span id="tags_list"></span>
+		<div id="search_results"><!-- wheeee --></div>
 		
 	</div>
 
@@ -126,8 +128,26 @@ $tune_date = $row['tune_date'];
 		function typing_in_tags() {
 			var l = $('#input_tag').val().length;
 			console.log(l);
-			$('#add_tag').attr('disabled', false);
-			$('#search_tags').attr('disabled', false);
+			if (l > 1) {
+				$('#add_tag').attr('disabled', false);
+				$('#search_tags').attr('disabled', false);
+			}
+		}
+		
+		function add_tag() {
+			var new_tag = $('#input_tag').val();
+			var old_tags = $('#tags_list').html();
+			$('#tags_list').html(old_tags + " " + new_tag);
+			$('#input_tag').val('');
+			$('#input_tag').focus();
+			$('#add_tag').attr('disabled', 'disabled');
+			
+		}
+		
+		function search_tags() {
+			var tags_list = $('#tags_list').html();
+			console.log("AAAAFDSFADSFASDF " + tags_list);
+			$('#search_results').load("ajax.php", "action=search&tags_list=" + tags_list);
 		}
 	</script>
 

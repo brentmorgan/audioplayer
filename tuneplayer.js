@@ -25,11 +25,7 @@ function tuneplayer() {
 		}
 
 		loopy();		// start checking the time for loopyness!!
-	/*	
-		function playAfterPause(){
-			document.getElementById('the_audio').play();
-		}
-	*/	
+
 	});
 
 	function playAfterPause(aud){
@@ -66,7 +62,10 @@ function tuneplayer() {
 	function keyWasPressed(k){
 
 		if (k.target.id == "input_tag") {	// !!!!!! If they're typing in an input field we don't want to activate the audio
-		console.log('RETURN');
+			console.log('RETURN');
+			if (k.keyCode == 13){	// Enter key
+				$('#input_tag').val() == '' ? search_tags() : add_tag();
+			}
 			return;							// player controls! (like if they type fLute we don't want LOOP to turn on & off)
 		}
 
