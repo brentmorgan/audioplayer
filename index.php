@@ -7,7 +7,7 @@ $_GET['tune_date'] ? $tune_date = $_GET['tune_date'] : $tune_date = date('Y-d-m'
 include('db_connect.php');
 $sql = "SELECT * FROM tp_tunes WHERE tune_date <= '" . $tune_date . "' ORDER BY tune_date DESC LIMIT 1";
 $result = mysql_query($sql,$conn) or print "Balls dude, problems. " . mysql_error();
-include('db_close');
+include('db_close.php');
 
 $row = mysql_fetch_assoc($result);
 
@@ -148,6 +148,11 @@ $tune_date = $row['tune_date'];
 			var tags_list = $('#tags_list').html();
 			console.log("AAAAFDSFADSFASDF " + tags_list);
 			$('#search_results').load("ajax.php", "action=search&tags_list=" + tags_list);
+			$('#tags_list').html('');
+		}
+		
+		function load_tune(id) {
+			console.log("Load Tune: " + id);
 		}
 	</script>
 
