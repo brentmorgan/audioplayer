@@ -1,5 +1,6 @@
 <?php
 /* ***** ajax.php ***** */
+date_default_timezone_set('America/New_York');
 
 if ($_GET['action'] == "search") {		// ********* TUNES BY TAGS section *********
 	$tags =  $_GET['tags_list'];
@@ -52,14 +53,40 @@ if ($_GET['action'] == "search") {		// ********* TUNES BY TAGS section *********
 	echo $out2;
 	
 	include('db_close.php');
+	
+} else if ($_GET['action'] == 'loadTune') {		/* ************************************************** Load Tune (by id) ************ */
+	include('db_connect.php');
+	$sql = "SELECT tune_id FROM tp_tunes WHERE tune_id = '" . $_GET['id'] . "'";
+	$result = mysql_query($sql,$conn) or print "Balls dude, problems. " . mysql_error();
+	include('db_close.php');
+
+	$row = mysql_fetch_assoc($result);
+
+	$tune_id = $row['tune_id'];
+	
+	$exts = array("aiff", "webm", "ogg", "wav", "mp3");		// possible file extensions
+	foreach ($exts as $ext) {
+		if (file_exists("audio/" . $tune_id . "." . $ext)) {
+			echo "<source src='audio/" . $tune_id . "." . $ext . "' type='audio/" . $ext . "' />";
+		}
+	}
+} else if ($_GET['action'] == 'showTuneMetaData') {		/* ************************************** Show Tune Meta Shit (by id) ******* */
+	include('db_connect.php');
+	$sql = "SELECT tune_title, tune_date, tune_player, tune_instrument FROM tp_tunes WHERE tune_id = '" . $_GET['id'] . "'";
+	$result = mysql_query($sql,$conn) or print "Balls dude, problems. " . mysql_error();
+	include('db_close.php');
+
+	$row = mysql_fetch_assoc($result);
+	
+	$tune_title = $row['tune_title'];
+	$tune_date = $row['tune_date'];
+	$tune_player = $row['tune_player'];
+	$tune_instrument = $row['tune_instrument'];
+	
+	echo "<span title='" . $tune_date . "\n" . $tune_player . "\n" . $tune_instrument . "'>" . $tune_title . "</span>";
 }
 
 
-
-/*
-echo "FFUFUFUFUF KCKCKCKCCKCKK YYYUYUYUYOOOOOO";
-echo "<h1>" . $_GET['poop'] . "</h1>";
-*/
 
 
 

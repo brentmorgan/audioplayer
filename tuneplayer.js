@@ -3,6 +3,7 @@
 function tuneplayer() {
 
 	document.getElementById('the_audio').addEventListener('loadedmetadata', function() { 
+		
 		var dur = this.duration; 
 		tune = {
 			loop: false,
@@ -11,6 +12,7 @@ function tuneplayer() {
 			speed: 100,
 			delay: 2
 		}
+		
 		updateView();
 
 		function loopy(){				// this is inside here because it can only start once the audio is fully loaded and defined etc...
@@ -25,31 +27,25 @@ function tuneplayer() {
 		}
 
 		loopy();		// start checking the time for loopyness!!
-
 	});
 
 	function playAfterPause(aud){
-	//	aud = document.getElementById('the_audio');
 		aud.pause();
 		setTimeout(function(){aud.play()}, tune.delay*1000);
 		var countdown = tune.delay;
-	
+
 		function tic() {
-			document.getElementById('countdown').innerHTML = "<h2>" + countdown + "</h2>";
+			document.getElementById('countdown').innerHTML = countdown;
 			countdown--;
 			countdown > -1 ? setTimeout(tic,1000) : document.getElementById('countdown').innerHTML = '';
 		}
-	
+
 		tic();
-	
-	
 	}
 
 	function updateView(){
-	//	console.log('UPDATE VIEW');
 		$('#inpoint').val(tune.inpoint);
 		$('#outpoint').val(tune.outpoint);
-	//	console.log(tune.loop);
 		$('#loop').prop("checked",tune.loop); // apparently you have to use prop() instead of attr() for some shit like form elements. awesome.
 		$('#delayRange').val(tune.delay);
 		$('#displayDelay').val(tune.delay);
@@ -62,7 +58,7 @@ function tuneplayer() {
 	function keyWasPressed(k){
 
 		if (k.target.id == "input_tag") {	// !!!!!! If they're typing in an input field we don't want to activate the audio
-			console.log('RETURN');
+			console.log('RETURN cause we donot care what fucking key they pressed');
 			if (k.keyCode == 13){	// Enter key
 				$('#input_tag').val() == '' ? search_tags() : add_tag();
 			}
@@ -73,7 +69,7 @@ function tuneplayer() {
 	
 		var aud = document.getElementById('the_audio');
 
-		console.log("Key was pressed!!! " + k.keyCode);
+		console.log("Key was pressed!!! " + k.keyCode + " " + k.target);
 		switch (k.keyCode) {
 		case 105:				// i ..... inpoint
 		case 73: 				// I
@@ -142,7 +138,6 @@ function tuneplayer() {
 	function rangeChanged(){
 		console.log('range changed');
 		$('#displayPlaybackSpeed').val($('#playbackSpeedRange').val());
-		//$('#the_audio').attr('playbackRate', $('playbackSpeedRange').val()/100);
 		document.getElementById('the_audio').playbackRate = $('#playbackSpeedRange').val()/100;
 	}
 
@@ -155,10 +150,47 @@ function tuneplayer() {
 }
 
 function sharedFunctions() {
-//	$('input:text').addClass('default');
-//	$('input:text').focus(function() { this.value=''; /* console.log(this); console.log($(this)); */ $(this).removeClass('default'); });
-
 	$('.userInput').focus(function() { this.value=''; /* console.log(this); console.log($(this)); */ $(this).removeClass('userInput'); });
+}
+
+function typing_in_tags() {
+	var l = $('#input_tag').val().length;
+	console.log(l);
+	if (l > 1) {
+		$('#add_tag').attr('disabled', false);
+		$('#search_tags').attr('disabled', false);
+	}
+}
+
+function add_tag() {
+	var new_tag = $('#input_tag').val();
+	var old_tags = $('#tags_list').html();
+	$('#tags_list').html(old_tags + " " + new_tag);
+	$('#input_tag').val('');
+	$('#input_tag').focus();
+	$('#add_tag').attr('disabled', 'disabled');
+	
+}
+
+function search_tags() {
+	var tags_list = $('#tags_list').html();
+	console.log("AAAAFDSFADSFASDF " + tags_list);
+	$('#search_results').load("ajax.php", "action=search&tags_list=" + tags_list);
+	$('#tags_list').html('');
+}
+
+function load_metadata(id) {
+	console.log('load_metadata ' + id);
+	$('#now_playing_text').load("ajax.php", "action=showTuneMetaData&id=" + id);
+}
+
+function load_tune(id) {
+	console.log("Load Tuuuuuuuuuuuune: " + id);
+	$('#the_audio').load("ajax.php", "action=loadTune&id=" + id, function() {
+		$('#the_audio').load();
+		tuneplayer();
+		load_metadata(id);
+	});
 }
 
 
