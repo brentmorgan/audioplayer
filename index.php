@@ -22,9 +22,15 @@ $tune_date = $row['tune_date'];
 <meta charset="UTF-8">
 <title>Brent&#39;s Tune Player Thingy</title>
 
+<!-- jQuery -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="tuneplayer.js"></script>
 
+<!-- jQuery UI -->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+<!-- mine -->
+<script src="tuneplayer.js"></script>
 <link href="tuneplayer.css" rel="stylesheet" type="text/css" />
 
 </head>
@@ -47,36 +53,10 @@ $tune_date = $row['tune_date'];
 		?>
 	</div>
 	
-	<!-- **************************** Choose Tune Here ********************************* -->
-	
-	<div id="chooser">
-		
-		<h3 title="wut?" style="cursor:help" onClick="$('#wut_recent').toggle('slow')">Recent Tunes:</h3>
-		<div id="wut_recent" style="display:none">
-			The most recent tune uploaded to the database will show up here by default. You can move backwards (and forwards when available) in time by clicking the "Prev" and "Next" buttons. The date displayed is the the date the recording was made, or if unavailable is the date the recording was uploaded to the database.
-		</div>
-		
-		<span id="recent_tunes">
-			<button id="prev" onClick="#">prev</button> <span id="tune_title"><?php echo $tune_title; ?></span> <span id="tune_date"><?php echo $tune_date; ?></span> <button id="next" onClick="#">next</button>
-		</span>
-
-		
-		<h3 title="wut?" style="cursor:help" onClick="$('#wut_tags').toggle('slow')">Tunes by Tags:</h3>
-		
-		<div id="wut_tags" style="display:none">
-			Enter 'tags' or 'keywords' here to search for particular tunes or types of tunes. If you are logged in you can also add your own custom tags to tunes. Examples of tags are things like 'fiddle', 'jig', 'jeanne freeman', 'variations', or pretty much anything else you can think of that might apply to a tune. You can combine multiple tags to create more refined search results; for instance using 'fiddle' and 'reel' should get you more focussed results than just 'fiddle' or 'reel' alone.
-		</div>
-		
-		<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags()" /> 
-		<button id="add_tag" onClick="add_tag()">Add</button> <button id="search_tags" onClick="search_tags()">Search</button>
-		<span id="tags_list"></span>
-		<div id="search_results"><!-- wheeee --></div>
-		
-	</div>
-
-<!-- ******************************* Audio player and controlls ************************* -->
+	<!-- ******************************* Audio player and controlls ************************* -->
 
 	<div id="div_audio">
+		<span id="now_playing">Now Playing: <div id="now_playing_text"></div></span>
 		<audio id="the_audio" controls>
 			<?php
 /*			
@@ -113,6 +93,41 @@ $tune_date = $row['tune_date'];
 			Delay <input type="range" id="delayRange" min="0" max="10" step="1" value="0" /> <input type="text" id="displayDelay" value="0" size="1" onClick="this.value=''" /> sec.
 			<div id="countdown"></div>
 		</div>
+	</div>
+
+	<!-- *************************** End Audio Player ************************************ -->
+	
+
+	
+	<!-- *************************** Tunes by Tags Here **************************** -->
+	
+	<div id="div_tunes_by_tags" class="ui-widget-content ui-corner-all">
+			
+		<h3 title="wut?" style="cursor:help" onClick="$('#wut_tags').toggle('slow')" class="ui-widget-header ui-corner-all">Tunes by Tags:</h3>
+		
+		<div id="wut_tags" style="display:none">
+			Enter 'tags' or 'keywords' here to search for particular tunes or types of tunes. If you are logged in you can also add your own custom tags to tunes. Examples of tags are things like 'fiddle', 'jig', 'jeanne freeman', 'variations', or pretty much anything else you can think of that might apply to a tune. You can combine multiple tags to create more refined search results; for instance using 'fiddle' and 'reel' should get you more focussed results than just 'fiddle' or 'reel' alone.
+		</div>
+		
+		<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags()" /> 
+		<button id="add_tag" onClick="add_tag()">Add</button> <button id="search_tags" onClick="search_tags()">Search</button>
+		<span id="tags_list"></span>
+		<div id="search_results"><!-- wheeee --></div>
+		
+	</div>
+
+	<!-- **************************** Recent Tunes Here ********************************* -->
+	
+	<div id="div_recent_tunes" class="ui-widget-content ui-corner-all">
+		
+		<h3 title="wut?" style="cursor:help" onClick="$('#wut_recent').toggle('slow')" class="ui-widget-header ui-corner-all">Recent Tunes:</h3>
+		<div id="wut_recent" style="display:none">
+			The most recent tune uploaded to the database will show up here by default. You can move backwards (and forwards when available) in time by clicking the "Prev" and "Next" buttons. The date displayed is the the date the recording was made, or if unavailable is the date the recording was uploaded to the database.
+		</div>
+		
+		<span id="recent_tunes">
+			<button id="prev" onClick="#">prev</button> <span id="tune_title"><?php echo $tune_title; ?></span> <span id="tune_date"><?php echo $tune_date; ?></span> <button id="next" onClick="#">next</button>
+		</span>
 	</div>
 
 
