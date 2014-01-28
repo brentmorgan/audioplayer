@@ -50,13 +50,13 @@ function tuneplayer() {
 		$('#delayRange').val(tune.delay);
 		$('#displayDelay').val(tune.delay);
 	}
-
-	window.addEventListener('keypress',keyWasPressed,false);
-	document.getElementById('playbackSpeedRange').addEventListener('change',rangeChanged, false);
-	document.getElementById('delayRange').addEventListener('change',delayChanged, false);
+	
+	var key_listener = window.addEventListener('keypress',keyWasPressed,false);
+	var speed_listener = document.getElementById('playbackSpeedRange').addEventListener('change',rangeChanged, false);
+	var range_listener = document.getElementById('delayRange').addEventListener('change',delayChanged, false);
 
 	function keyWasPressed(k){
-
+/*		
 		if (k.target.id == "input_tag") {	// !!!!!! If they're typing in an input field we don't want to activate the audio
 			console.log('RETURN cause we donot care what fucking key they pressed');
 			if (k.keyCode == 13){	// Enter key
@@ -64,12 +64,12 @@ function tuneplayer() {
 			}
 			return;							// player controls! (like if they type fLute we don't want LOOP to turn on & off)
 		}
-
+*/
 		var update = true;
 	
 		var aud = document.getElementById('the_audio');
 
-		console.log("Key was pressed!!! " + k.keyCode + " " + k.target);
+		console.log("Key was pressed!!! " + k.keyCode + " " + k.srcElement + " " + Object.keys(k));
 		switch (k.keyCode) {
 		case 105:				// i ..... inpoint
 		case 73: 				// I
@@ -88,6 +88,7 @@ function tuneplayer() {
 		case 76:   				// loop
 			tune.loop == false ? tune.loop = true : tune.loop = false;
 			aud.loop = tune.loop;
+			//console.log(tune.loop);
 			break;
 		case 13:    			// enter key
 			console.log(k.target.id);
@@ -150,7 +151,7 @@ function tuneplayer() {
 }
 
 function sharedFunctions() {
-	$('.userInput').focus(function() { this.value=''; /* console.log(this); console.log($(this)); */ $(this).removeClass('userInput'); });
+	$('.userInput').focus(function() { this.value=''; $(this).removeClass('userInput'); });
 }
 
 function typing_in_tags() {
@@ -187,8 +188,9 @@ function load_metadata(id) {
 function load_tune(id) {
 	console.log("Load Tuuuuuuuuuuuune: " + id);
 	$('#the_audio').load("ajax.php", "action=loadTune&id=" + id, function() {
+		delete window.tunePlayer;	// delete original instance of this so functions don't get called twice
 		$('#the_audio').load();
-		tuneplayer();
+	//	tuneplayer();					// don't do this, this fucks everything up by adding new event listeners
 		load_metadata(id);
 	});
 }

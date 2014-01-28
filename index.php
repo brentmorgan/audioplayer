@@ -74,7 +74,7 @@ date_default_timezone_set('America/New_York');
 			Enter 'tags' or 'keywords' here to search for particular tunes or types of tunes. If you are logged in you can also add your own custom tags to tunes. Examples of tags are things like 'fiddle', 'jig', 'jeanne freeman', 'variations', or pretty much anything else you can think of that might apply to a tune. You can combine multiple tags to create more refined search results; for instance using 'fiddle' and 'reel' should get you more focussed results than just 'fiddle' or 'reel' alone.
 		</div>
 		
-		<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags()" /> 
+		<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags(this)" /> 
 		<button id="add_tag" onClick="add_tag()">Add</button> <button id="search_tags" onClick="search_tags()">Search</button>
 		<span id="tags_list"></span>
 		<div id="search_results"><!-- wheeee --></div>
@@ -100,7 +100,16 @@ date_default_timezone_set('America/New_York');
 
 	<script>
 	$(function() {
-		tuneplayer(); // Loads most recent tune by default. or no wait it doesn't load shit actually. why is this even here?
+		tuneplayer(); // Loads the player and control functions without loading a tune
+		
+		tags_listener = document.getElementById('input_tag').addEventListener('keypress', tagBeingTyped, false);
+		
+		function tagBeingTyped(k) {
+			console.log("tags_listener: " + k.keyCode);
+			if (k.keyCode == 13){	// Enter key
+				$('#input_tag').val() == '' ? search_tags() : add_tag();
+			}
+		}
 		
 		sharedFunctions();
 		
