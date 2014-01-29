@@ -1,6 +1,7 @@
 <?php
 session_start();
 ($_SESSION['isloggedin'] && $_SESSION['can_upload']) ? 1 : header('Location: index.php');
+date_default_timezone_set('America/New_York');
 
 if ($_POST) {	/* ******************** PROECESS FORM ************************** */
 	
@@ -18,6 +19,7 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 	}
 	
 	/* *************************** Upload audio files to temp directory, while checking for errors ***************************** */
+	
 	$saved_audio = array();
 	
 	foreach ($_FILES as $file) {
@@ -42,29 +44,29 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 		if ($_POST['instrument'] == 'Instrument') { $_POST['instrument'] = ''; }
 		if ($_POST['type'] == 'Tune Type') { $_POST['type'] = ''; }
 		if ($_POST['datepicker'] == 'Recorded Date' || $_POST['datepicker'] == '') {
-			$date = date('Y-d-m');
+			$date = date('Y-m-d');
 		} else {						// mySQL dates go YYYY-MM-DD, but somehow it seems the MM and DD need to be reversed????
 			$date = $_POST['date'];
 			$date_parts = explode("/", $date);
-			$date = $date_parts[2] . "-" . $date_parts[0] . "-" . $date_parts[1];
+			$date = $date_parts[2] . "-" . $date_parts[1] . "-" . $date_parts[0];
 		}
 		
-		$sql = "INSERT INTO tp_tunes (tune_title, tune_player, tune_instrument, tune_type, tune_date) VALUES ('" . $_POST['title'] . "', '" . $_POST['player'] . "', '". $_POST['instrument'] . "', '" . $_POST['type'] . "', '" . $date . "')";
+		$sql = "INSERT INTO tp_tunes (tune_title, tune_player, tune_instrument, tune_type, tune_date) VALUES ('" . htmlspecialchars($_POST['title'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['player'], ENT_QUOTES) . "', '". htmlspecialchars($_POST['instrument'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['type'], ENT_QUOTES) . "', '" . $date . "')";
 		$ins = mysql_query($sql, $conn) or print "Oh boy something went wrong with inserting tune info! " . mysql_error() . "<br/>";
-		
+	
 		$tune_id = mysql_insert_id();
 		
 		foreach ($saved_audio as $file) {
 			move_uploaded_file($file['loc'], "audio/" . $tune_id . "." . $file['ext']) or print "Balls. Error moving temp audio file to audio directory. Sad face. " . $file;
 		}
-		
+
 		/* Tags */
-		
-		$tags = $_POST['title'];
-		if ($_POST['player'] != '') { $tags .= "," . $_POST['player']; }
-		if ($_POST['instrument'] != '') { $tags .= "," . $_POST['instrument']; }
-		if ($_POST['type'] != '') { $tags .= "," . $_POST['type']; }
-		$tags .= "," . $_POST['tags'];
+	
+		$tags = htmlspecialchars($_POST['title'], ENT_QUOTES);
+		if ($_POST['player'] != '') { $tags .= "," . htmlspecialchars($_POST['player'], ENT_QUOTES); }
+		if ($_POST['instrument'] != '') { $tags .= "," . htmlspecialchars($_POST['instrument'], ENT_QUOTES); }
+		if ($_POST['type'] != '') { $tags .= "," . htmlspecialchars($_POST['type'], ENT_QUOTES); }
+		$tags .= "," . htmlspecialchars($_POST['tags'], ENT_QUOTES);
 		
 		$sql = "INSERT INTO tp_tags (tags_tune_id, tags_user_id, tags_tag) VALUES ( " . $tune_id . ", " . $_SESSION['user_id'] . ", '" . $tags . "')";
 		$ins = mysql_query($sql,$conn) or print "Aw man something went wrong with tha muthafuckin tags. " . mysql_error();
@@ -73,7 +75,9 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 	}
 	
 	$notice .="</div>";
+		
 }
+		
 ?>
 <!doctype html>
 <html>
