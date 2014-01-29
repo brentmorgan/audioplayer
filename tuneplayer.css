@@ -9,11 +9,40 @@ body {
 	background-color:	#4D5660;
 	color:				#fff;
 	font-family: 		sans-serif;
+	
+	text-shadow: 		2px 2px 1px rgba(120, 120, 120, 1);
+}
+
+.no-shadow {
+	text-shadow:		0px 0px 0px;
+}
+
+#center_dat_shit {
+	width:				400px;
+/*	padding:			15px;
+	padding-top:		8px;	
+	padding-bottom:		75px;
+	position:			relative;	*/
+	margin:				auto;
+/*	background-color:	#aaa;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	
+	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+*/
 }
 
 a, a:visited {
 	color:				#EDC845;
 	text-decoration:	none;
+}
+
+.ui-widget-content a {
+	color:				#EDC845;
+	font-weight:		bold;
 }
 
 a:hover {
@@ -22,12 +51,48 @@ a:hover {
 
 h2 {
 	letter-spacing: 	3px;
-	text-shadow: 		2px 2px 1px rgba(220, 220, 220, 1);
+/*	text-shadow: 		2px 2px 1px rgba(120, 120, 120, 1);	*/
 	font-family:		sans-serif;
+}
+
+h3 {
+	padding:			10px;
 }
 
 div {
 	padding:			5px;
+}
+
+#welcome {
+	position:			fixed;
+	top:				12px;
+	right:				24px;
+}
+
+#top_title {
+
+}
+
+#now_playing {
+	width:			100%;
+}
+
+#the_whole_player {
+/*	width:				400px;	*/
+	padding:			15px;
+	/*padding-top:		8px;	*/
+	padding-bottom:		75px;
+	position:			relative;
+/*	margin:				auto;	*/
+	background-color:	#aaa;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	
+	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	
 }
 
 #div_audio {
@@ -53,7 +118,12 @@ div {
 
 
 #countdown {
-	
+	font-size:			28px;
+	position:			absolute;
+	left:				360px;
+	top:				15px;
+	width:				100%;
+
 }
 
 
