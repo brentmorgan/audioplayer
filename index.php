@@ -18,12 +18,6 @@ date_default_timezone_set('America/New_York');
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
-<!-- Custom UI stuff??????
-<link href="css/le-frog/jquery-ui-1.10.4.custom.css" rel="stylesheet">
-<script src="js/jquery-1.10.2.js"></script>
-<script src="js/jquery-ui-1.10.4.custom.js"></script>
--->
-
 <!-- mine -->
 <script src="tuneplayer.js"></script>
 <link href="tuneplayer.css" rel="stylesheet" type="text/css" />
@@ -40,12 +34,12 @@ date_default_timezone_set('America/New_York');
 			<?php
 			echo $un;
 			if ($_SESSION['isloggedin']) {
-				echo " <a href='kill.php'> &bull; logout</a> ";
+				echo " &bull; <a href='kill.php'>logout</a> ";
 				if ($_SESSION['can_upload']) {
-					echo " <a href='upload.php'> &bull; upload</a> "; 
+					echo " &bull; <a href='upload.php'>upload</a> "; 
 				}
 			} else {
-				echo " <a href='login.php'> &bull; login</a>";
+				echo " &bull; <a href='login.php'>login</a>";
 			}
 			?>
 		</div>
@@ -104,7 +98,7 @@ date_default_timezone_set('America/New_York');
 				</div>
 		
 				<span id="recent_tunes">
-					<button id="prev" onClick="#">prev</button> <span id="tune_title"> </span> <span id="tune_date"> </span> <button id="next" onClick="#">next</button>
+					<button id="prev" onClick="alert('oops this doesn\'t work yet!')">prev</button> <span id="tune_title" class="no-shadow"> </span> <span id="tune_date" class="no-shadow"> </span> <button id="next" onClick="#">next</button>
 				</span>
 			</div>
 		
@@ -126,6 +120,8 @@ $(function() {
 	}
 	
 	sharedFunctions();
+	
+	tune_by_date();	// load most recent tune into Recent Tunes thing
 	
 	$('#search_tags').attr('disabled', 'disbled');
 	$('#next').attr('disabled', 'disabled');

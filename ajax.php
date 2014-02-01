@@ -6,6 +6,7 @@ if ($_GET['action'] == "search") {		// ********* TUNES BY TAGS section *********
 	$tags =  $_GET['tags_list'];
 	$crap = array(',', ';');
 	$tags = str_replace($crap, " ", $tags);
+	$tags = htmlspecialchars($tags, ENT_QUOTES);
 	$tags = explode(" ", $tags);
 	$tags = array_filter($tags); // remove empty elemnts left over from punctuation and spaces
 
@@ -35,7 +36,9 @@ if ($_GET['action'] == "search") {		// ********* TUNES BY TAGS section *********
 		$result = mysql_query($sql, $conn) or print "FUUUUUUCK " . mysql_error();
 		$tune_info = mysql_fetch_assoc($result);
 		
-		$html = "<div><a href='#' onClick='load_tune(" . $id . ")' title='" . $tune_info['tune_player'] . ": " . $tune_info['tune_date'] . "'>" . $tune_info['tune_title'] . "</a></div>";
+		$datetime = explode(" ", $tune_info['tune_date']);	// discard time information ($datetime[1])
+		
+		$html = "<div><a href='#' onClick='load_tune(" . $id . ")' title='" . $tune_info['tune_player'] . ": " . $datetime[0] . "'>" . $tune_info['tune_title'] . "</a></div>";
 		if ($hits[$id] == $total_tags) {
 			$out1 .= $html; 
 			$count1++;
@@ -79,11 +82,40 @@ if ($_GET['action'] == "search") {		// ********* TUNES BY TAGS section *********
 	$row = mysql_fetch_assoc($result);
 	
 	$tune_title = $row['tune_title'];
-	$tune_date = $row['tune_date'];
+	$tune_datetime = $row['tune_date'];
+	$tune_datetime = explode(" ", $tune_datetime);
+	$tune_date = $tune_datetime[0];
 	$tune_player = $row['tune_player'];
 	$tune_instrument = $row['tune_instrument'];
 	
 	echo "<span title='" . $tune_date . "\n" . $tune_player . "\n" . $tune_instrument . "'>" . $tune_title . "</span>";
+} else if ($_GET['action'] == 'tuneTitleByDate') {
+	include('db_connect.php');
+	$sql = "SELECT tune_title, tune_id FROM tp_tunes WHERE tune_date <= '" . date('Y-m-d') . "' ORDER BY tune_date DESC LIMIT 1";
+	$res = mysql_query($sql, $conn) or print "OOOOOps problems. " . mysql_error();
+	include('db_close.php');
+	
+	$row = mysql_fetch_row($res);
+	
+	echo "<a href='#' onClick='load_tune(" . $row[1] . ")'>" . $row[0] . "</a>";
+	
+} else if ($_GET['action'] == 'tuneDateByDate') {
+	include('db_connect.php');
+	$sql = "SELECT tune_date FROM tp_tunes WHERE tune_date <= '" . date('Y-m-d') . "' ORDER BY tune_date DESC LIMIT 2";
+	$res = mysql_query($sql, $conn) or print "Oh no problem with dates. " . mysql_error();
+	include('db_close');
+	
+	$dates = array();
+	
+	while ($row = mysql_fetch_assoc($res)) {
+		array_push($dates, $row);
+	}
+
+	//echo $dates[0]['tune_date'];
+	$datetime = $dates[0]['tune_date'];
+	$datetime = explode(" ", $datetime);
+	$date = $datetime[0];
+	echo $date;
 }
 
 

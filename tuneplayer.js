@@ -56,20 +56,16 @@ function tuneplayer() {
 	var range_listener = document.getElementById('delayRange').addEventListener('change',delayChanged, false);
 
 	function keyWasPressed(k){
-/*		
+	
 		if (k.target.id == "input_tag") {	// !!!!!! If they're typing in an input field we don't want to activate the audio
-			console.log('RETURN cause we donot care what fucking key they pressed');
-			if (k.keyCode == 13){	// Enter key
-				$('#input_tag').val() == '' ? search_tags() : add_tag();
-			}
 			return;							// player controls! (like if they type fLute we don't want LOOP to turn on & off)
 		}
-*/
+
 		var update = true;
 	
 		var aud = document.getElementById('the_audio');
 
-		console.log("Key was pressed!!! " + k.keyCode + " " + k.srcElement + " " + Object.keys(k));
+		console.log("Key was pressed!!! " + k.keyCode); //+ Object.keys(k));
 		switch (k.keyCode) {
 		case 105:				// i ..... inpoint
 		case 73: 				// I
@@ -88,7 +84,6 @@ function tuneplayer() {
 		case 76:   				// loop
 			tune.loop == false ? tune.loop = true : tune.loop = false;
 			aud.loop = tune.loop;
-			//console.log(tune.loop);
 			break;
 		case 13:    			// enter key
 			console.log(k.target.id);
@@ -195,5 +190,9 @@ function load_tune(id) {
 	});
 }
 
+function tune_by_date() {
+	$('#tune_title').load('ajax.php', 'action=tuneTitleByDate');
+	$('#tune_date').load('ajax.php', 'action=tuneDateByDate');
+}
 
 

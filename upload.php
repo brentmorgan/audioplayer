@@ -44,12 +44,13 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 		if ($_POST['instrument'] == 'Instrument') { $_POST['instrument'] = ''; }
 		if ($_POST['type'] == 'Tune Type') { $_POST['type'] = ''; }
 		if ($_POST['datepicker'] == 'Recorded Date' || $_POST['datepicker'] == '') {
-			$date = date('Y-m-d');
+			$date = date('Y-m-d H:i:s');
 		} else {						// mySQL dates go YYYY-MM-DD, but somehow it seems the MM and DD need to be reversed????
 			$date = $_POST['date'];
 			$date_parts = explode("/", $date);
-			$date = $date_parts[2] . "-" . $date_parts[1] . "-" . $date_parts[0];
-		}
+			$time = date('H:i:s');
+			$date = $date_parts[2] . "-" . $date_parts[1] . "-" . $date_parts[0] . $time; // adds the current time just to have some
+		}																			// time information so tunes on the same day be different
 		
 		$sql = "INSERT INTO tp_tunes (tune_title, tune_player, tune_instrument, tune_type, tune_date) VALUES ('" . htmlspecialchars($_POST['title'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['player'], ENT_QUOTES) . "', '". htmlspecialchars($_POST['instrument'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['type'], ENT_QUOTES) . "', '" . $date . "')";
 		$ins = mysql_query($sql, $conn) or print "Oh boy something went wrong with inserting tune info! " . mysql_error() . "<br/>";
@@ -128,7 +129,7 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 			<input type="text" name="player" id="player" value="Player" class="userInput" /><br />
 			<input type="text" name="instrument" id="instrument" value="Instrument" class="userInput" /><br />
 			<input type="text" name="type" id="type" value="Tune Type" class="userInput" /><br />
-			<input type="text" name="date" id="datepicker" value="Recorded Date" class="userInput" /><br />
+			<input type="text" name="datepicker" id="datepicker" value="Recorded Date" class="userInput" /><br />
 		</p>
 		
 		<h3>tags</h3>
