@@ -190,8 +190,9 @@ function load_tune(id) {
 	});
 }
 
-function tune_by_date() {
-	$('#tune_title').load('ajax.php', 'action=tuneTitleByDate');
+function tune_by_date(d) {
+	$('#tune_title').load('ajax.php', 'action=tuneTitleByDate&d=' + d);
+	console.log(d);
 	$('#tune_date').load('ajax.php', 'action=tuneDateByDate');
 }
 

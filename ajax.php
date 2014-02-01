@@ -90,29 +90,29 @@ if ($_GET['action'] == "search") {		// ********* TUNES BY TAGS section *********
 	
 	echo "<span title='" . $tune_date . "\n" . $tune_player . "\n" . $tune_instrument . "'>" . $tune_title . "</span>";
 } else if ($_GET['action'] == 'tuneTitleByDate') {
+	if (isset($_GET['d'])) {
+		$d = $_GET['d'];
+	} else {
+		$d = date('Y-m-d H:i:m');
+	}
 	include('db_connect.php');
-	$sql = "SELECT tune_title, tune_id FROM tp_tunes WHERE tune_date <= '" . date('Y-m-d') . "' ORDER BY tune_date DESC LIMIT 1";
+	$sql = "SELECT tune_title, tune_id, tune_date FROM tp_tunes WHERE tune_date <= '" . $d . "' ORDER BY tune_date DESC LIMIT 1";
 	$res = mysql_query($sql, $conn) or print "OOOOOps problems. " . mysql_error();
 	include('db_close.php');
 	
 	$row = mysql_fetch_row($res);
 	
-	echo "<a href='#' onClick='load_tune(" . $row[1] . ")'>" . $row[0] . "</a>";
+	echo "<a href='#' onClick='load_tune(" . $row[1] . ")'>" . $row[0] . "</a><script>document.getElementById('prev').onclick='tune_by_date(\"". $row[2] . "\")';</script>";
 	
 } else if ($_GET['action'] == 'tuneDateByDate') {
 	include('db_connect.php');
-	$sql = "SELECT tune_date FROM tp_tunes WHERE tune_date <= '" . date('Y-m-d') . "' ORDER BY tune_date DESC LIMIT 2";
+	$sql = "SELECT tune_date FROM tp_tunes WHERE tune_date <= '" . date('Y-m-d') . "' ORDER BY tune_date DESC LIMIT 1";
 	$res = mysql_query($sql, $conn) or print "Oh no problem with dates. " . mysql_error();
-	include('db_close');
+	include('db_close.php');
 	
-	$dates = array();
+	$row= mysql_fetch_row($res);
 	
-	while ($row = mysql_fetch_assoc($res)) {
-		array_push($dates, $row);
-	}
-
-	//echo $dates[0]['tune_date'];
-	$datetime = $dates[0]['tune_date'];
+	$datetime = $row[0];
 	$datetime = explode(" ", $datetime);
 	$date = $datetime[0];
 	echo $date;
