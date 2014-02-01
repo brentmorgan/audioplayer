@@ -190,10 +190,14 @@ function load_tune(id) {
 	});
 }
 
-function tune_by_date(d) {
-	$('#tune_title').load('ajax.php', 'action=tuneTitleByDate&d=' + d);
-	console.log(d);
-	$('#tune_date').load('ajax.php', 'action=tuneDateByDate');
+function tune_by_date(d,e) {
+	if (typeof d === 'undefined') { 
+		var data = '';
+	} else {
+		var when = e.target.id;
+		var date = d;
+		var data = "&d="+date+"&when="+when;
+	}
+	$('#recent_tunes').load('ajax.php', 'action=tuneByDate'+data);
 }
-
 

@@ -55,11 +55,7 @@ date_default_timezone_set('America/New_York');
 	
 					<div id="the_audio_controls">
 						Playback Speed: <input type="range" id="playbackSpeedRange" min="50" max="100" step="1" value="100" /> <input type="text" id="displayPlaybackSpeed" value="100" size="2" onClick="this.value=''" />%	<br/>
-						<!--
-						<a href="#" onClick="var bull = { keyCode: 105 }; keyWasPressed(bull);" title="shortcut: I"> IN</a> -->
 							Inpoint: <input type="text" id="inpoint" value="0" size="2" onClick="this.value=''">
-						<!--	
-						<a href="#" onClick="var bull = { keyCode: 111 }; keyWasPressed(bull);" title="shortcut: O"> OUT</a> -->
 							Outpoint: <input type="text" id="outpoint" value="" size="2" onClick="this.value=''"> 
 						Loop? <input type="checkbox" id="loop" onClick="var bull = { keyCode: 108 }; keyWasPressed(bull); this.blur();"> <br/>
 						Delay: <input type="range" id="delayRange" min="0" max="10" step="1" value="0" /> <input type="text" id="displayDelay" value="0" size="1" onClick="this.value=''" /> sec.
@@ -69,8 +65,6 @@ date_default_timezone_set('America/New_York');
 
 			<!-- *************************** End Audio Player ************************************ -->
 	
-
-	
 			<!-- *************************** Tunes by Tags Here **************************** -->
 	
 			<div id="div_tunes_by_tags" class="ui-widget-content ui-corner-all">
@@ -78,7 +72,7 @@ date_default_timezone_set('America/New_York');
 				<h3 title="wut?" style="cursor:help" onClick="$('#wut_tags').toggle('slow')" class="ui-widget-header ui-corner-all">Tunes by Tags: </span></h3>
 		
 				<div id="wut_tags" class="no-shadow" style="display:none">
-					Enter 'tags' or 'keywords' here to search for particular tunes or types of tunes. If you are logged in you can also add your own custom tags to tunes. Examples of tags are things like 'fiddle', 'jig', 'jeanne freeman', 'variations', or pretty much anything else you can think of that might apply to a tune. You can combine multiple tags to create more refined search results; for instance using 'fiddle' and 'reel' should get you more focussed results than just 'fiddle' or 'reel' alone.
+					Enter tags here to search for particular tunes or types of tunes. If you are logged in you will also be able add your own custom tags to tunes so you can find them again. You can combine multiple tags to create more refined search results; for instance using 'fiddle' and 'reel' should get you more focussed results than just 'fiddle' or 'reel' alone.
 				</div>
 		
 				<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags(this)" /> 
@@ -94,12 +88,9 @@ date_default_timezone_set('America/New_York');
 		
 				<h3 title="wut?" style="cursor:help" onClick="$('#wut_recent').toggle('slow')" class="ui-widget-header ui-corner-all">Recent Tunes:</h3>
 				<div id="wut_recent" class="no-shadow" style="display:none">
-					The most recent tune uploaded to the database will show up here by default. You can move backwards (and forwards when available) in time by clicking the "Prev" and "Next" buttons. The date displayed is the the date the recording was made, or if unavailable is the date the recording was uploaded to the database.
+					The most recent tune uploaded to the database will show up here by default. You can move backwards (and forwards when available) in time by clicking the "Prev" and "Next" buttons. The date displayed is the the date the recording was made, or the date the recording was uploaded to the database.
 				</div>
-		
-				<span id="recent_tunes">
-					<button id="prev" onClick="alert('oops this doesn\'t work yet!')">prev</button> <span id="tune_title" class="no-shadow"> </span> <span id="tune_date" class="no-shadow"> </span> <button id="next" onClick="#">next</button>
-				</span>
+				<div id="recent_tunes"></div>	
 			</div>
 		
 		</div>
@@ -124,7 +115,6 @@ $(function() {
 	tune_by_date();	// load most recent tune into Recent Tunes thing
 	
 	$('#search_tags').attr('disabled', 'disbled');
-	$('#next').attr('disabled', 'disabled');
 	$('#add_tag').attr('disabled', 'disabled');
 });
 </script>

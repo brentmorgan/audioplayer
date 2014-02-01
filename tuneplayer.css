@@ -19,20 +19,7 @@ body {
 
 #center_dat_shit {
 	width:				400px;
-/*	padding:			15px;
-	padding-top:		8px;	
-	padding-bottom:		75px;
-	position:			relative;	*/
 	margin:				auto;
-/*	background-color:	#aaa;
-	-webkit-border-radius: 15px;
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-	
-	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-*/
 }
 
 a, a:visited {
@@ -126,6 +113,29 @@ div {
 
 }
 
+#recent_tunes {
+	width:				100%;
+	margin:				auto;
+}
+
+#prev_load_next_buttons button {
+	width:				31%
+}
+
+#tune_by_tune_date {
+	padding:			10px;
+	margin:				0px auto;
+}
+
+#tune_by_tune_date_name {
+
+}
+
+#tune_by_date_tune_date {
+	float:			right;
+	margin-right:	10px;
+}
+
 
 /* ************ upload.php ********** */
 
@@ -156,3 +166,14 @@ div {
 .userInput {
 	color:				#ccc;
 }
+
+
+
+
+
+
+
+
+
+
+
