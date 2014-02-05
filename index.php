@@ -28,6 +28,7 @@ date_default_timezone_set('America/New_York');
 	<div id="center_dat_shit">
 		
 		<h2 id="top_title">Brent's Tune Player Thingy</h2>
+		<div id="alert" class="no-shadow"></div>
 	
 		<div id="welcome">
 			Welcome, 
@@ -72,7 +73,7 @@ date_default_timezone_set('America/New_York');
 				<h3 title="wut?" style="cursor:help" onClick="$('#wut_tags').toggle('slow')" class="ui-widget-header ui-corner-all">Tunes by Tags: </span></h3>
 		
 				<div id="wut_tags" class="no-shadow" style="display:none">
-					Enter tags here to search for particular tunes or types of tunes. If you are logged in you will also be able add your own custom tags to tunes so you can find them again. You can combine multiple tags to create more refined search results; for instance using 'fiddle' and 'reel' should get you more focussed results than just 'fiddle' or 'reel' alone.
+					Enter tags here to search for particular tunes or types of tunes. If you are logged in you will also be able add your own custom tags to tunes so you can find them again. You can combine multiple tags to create more refined search results; for instance using 'reel' and 'jeanne' should get you more focussed results than just 'reel' or 'jeanne' alone.
 				</div>
 		
 				<input type="text" id="input_tag" value="Enter Tags Here" class="userInput" onKeyUp="typing_in_tags(this)" /> 
@@ -100,6 +101,16 @@ date_default_timezone_set('America/New_York');
 <script>
 $(function() {
 	tuneplayer(); // Loads the player and control functions without loading a tune
+	
+	$.ajax({
+		url: 'ajax.php',
+		data: 'action=detect_chrome'
+	}).done(function(data) {
+		if (data == "false"){
+			$('#alert').html('<a href="https://www.google.com/intl/en/chrome/"><img alt="Chrome" src="https://www.google.com/intl/en/chrome/assets/common/images/chrome_logo_2x.png" style="float:left"></a> <p style="text-align:right">This page is optimized for Google Chrome. <br/>It may or may not work correctly in whatever silly browser you are using. </p> <p><a href="https://www.google.com/intl/en/chrome/">Download Chrome here</a> <br/>or<br/> <a href="#" onClick="$(\'#alert\').hide(\'slow\')">continue at your own risk</a>. </p>');
+			$('#alert').show('slow');
+		}
+	})
 	
 	tags_listener = document.getElementById('input_tag').addEventListener('keypress', tagBeingTyped, false);
 	

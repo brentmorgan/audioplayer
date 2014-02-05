@@ -27,7 +27,7 @@ if ($_GET['action'] == "search") {		// *****************************************
 	}
 	
 	$out1 = "<div>Top Results:</div>";
-	$out2 = "<div onClick='$(\"#more_results\").toggle(\"slow\")'>More Results</div><div id='more_results' style='display:none'>";
+	$out2 = "<div onClick='$(\"#more_results\").toggle(\"slow\")' id='div_more_results' >More Results?</div><div id='more_results' style='display:none'>";
 	$count1 = 0;
 	$count2 = 0;
 	
@@ -121,6 +121,12 @@ if ($_GET['action'] == "search") {		// *****************************************
 		$date = $datetime[0];
 
 		echo "<div id='prev_load_next_buttons'><button id='prev' onClick='tune_by_date(\"". $row[2] . "\", event)'>Prev</button> <button id='load_tune' onClick='load_tune(" . $row[1] . ")'>Load</button> <button id='next' onClick='tune_by_date(\"". $row[2] . "\", event)'>Next</button></div><span id='tune_by_date_tune' class='no-shadow'><span id='tune_by_date_tune_name'>" . $row[0] . "</span><span id='tune_by_date_tune_date'>" . $date . "</span></span>";
+	}
+} else if ($_GET['action'] == 'detect_chrome') {					// ******** Detect Google Chrome
+	if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') === false){
+		echo "false";
+	} else {
+		echo "true";
 	}
 }
 
