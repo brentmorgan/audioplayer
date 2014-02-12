@@ -44,14 +44,15 @@ $_SESSION['loc'] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 
 	
 </head>
 <body onLoad="document.getElementById('un').focus()">
-	
-<div id='box'>
-	<form method="POST">
-	<p>&nbsp; &nbsp; &nbsp; email: <input type='text' name='un' id='un' /></p> <!-- sorry this is REALLY LAME but i wanted them to line up and I am lazy -->
-	<p>password: <input type='password' name='pw' /></p>
-	<input type='submit' />
-</form>
-</div>
 
+	<div id="center_dat_shit">
+		<div id='box'>
+			<form method="POST">
+			<p>&nbsp; &nbsp; &nbsp; email: <input type='text' name='un' id='un' /></p> <!-- sorry this is REALLY LAME but i wanted them to line up and I am lazy -->
+			<p>password: <input type='password' name='pw' /></p>
+			<input type='submit' />
+		</form>
+	</div>
+</div>
 </body>
 </html>

@@ -46,10 +46,10 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 		if ($_POST['datepicker'] == 'Recorded Date' || $_POST['datepicker'] == '') {
 			$date = date('Y-m-d H:i:s');
 		} else {						// mySQL dates go YYYY-MM-DD, but somehow it seems the MM and DD need to be reversed????
-			$date = $_POST['date'];
+			$date = $_POST['datepicker'];
 			$date_parts = explode("/", $date);
 			$time = date('H:i:s');
-			$date = $date_parts[2] . "-" . $date_parts[1] . "-" . $date_parts[0] . $time; // adds the current time just to have some
+			$date = $date_parts[2] . "-" . $date_parts[1] . "-" . $date_parts[0] . " " . $time; // adds the current time just to have some
 		}																			// time information so tunes on the same day be different
 		
 		$sql = "INSERT INTO tp_tunes (tune_title, tune_player, tune_instrument, tune_type, tune_date) VALUES ('" . htmlspecialchars($_POST['title'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['player'], ENT_QUOTES) . "', '". htmlspecialchars($_POST['instrument'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['type'], ENT_QUOTES) . "', '" . $date . "')";
@@ -104,52 +104,54 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 </head>
 <body onLoad="$('#instructions_text').hide()">
 	
-	<?php echo $notice; ?>
+	<div id="center_dat_shit">
+		<?php echo $notice; ?>
 	
-	<h2>File Upload</h2>
-	<div id="instructions">
-		<a href="#" onClick="$('#instructions_text').toggle('slow')">Instructions</a>
-		<div id="instructions_text">
-			<p class="italic">For best compatibility across browsers and devices it is advisable to upload several different versions of each audio file in different codecs. Simple transcoding can be done via the command line in a Terminal window using FFMPEG as follows:</p>
-			<div class="code">ffmpeg -i [filename].[extension] [filename].[newextension]</div>
-				Where [filename] is the name of your original file, [extension] is its file extension, and [newextension] is the file extension of the format you are converting to. For example if you have an existing AIFF file called myTune.aiff you could use
-				<div class="code">ffmpeg -i myTune.aiff myTune.m4a</div>
-				to create a new file in M4A format.
-				<p>For best results upload files in these formats:</p>
-				<p>aiff<br/>wav<br/>ogg<br/>webm<br/>m4a</p>
-				<p class="important">Note that all versions of a particular recording must be uploaded at once, or else they will be considred a different tune, not different formats of the same recording.</p>
+		<h2>File Upload</h2>
+		<div id="instructions">
+			<a href="#" onClick="$('#instructions_text').toggle('slow')">Instructions</a>
+			<div id="instructions_text">
+				<p class="italic">For best compatibility across browsers and devices it is advisable to upload several different versions of each audio file in different codecs. Simple transcoding can be done via the command line in a Terminal window using FFMPEG as follows:</p>
+				<div class="code">ffmpeg -i [filename].[extension] [filename].[newextension]</div>
+					Where [filename] is the name of your original file, [extension] is its file extension, and [newextension] is the file extension of the format you are converting to. For example if you have an existing AIFF file called myTune.aiff you could use
+					<div class="code">ffmpeg -i myTune.aiff myTune.m4a</div>
+					to create a new file in M4A format.
+					<p>For best results upload files in these formats:</p>
+					<p>aiff<br/>wav<br/>ogg<br/>webm<br/>m4a</p>
+					<p class="important">Note that all versions of a particular recording must be uploaded at once, or else they will be considred a different tune, not different formats of the same recording.</p>
+			</div>
 		</div>
-	</div>
 	
-	<h3>metadata</h3>
-	<form method="POST" enctype="multipart/form-data" action="upload.php">
-		<p>
-			<input type="text" name="title" id="title" value="Tune Title" class="userInput" />
-				<?php echo $error_title; ?><br />
-			<input type="text" name="player" id="player" value="Player" class="userInput" /><br />
-			<input type="text" name="instrument" id="instrument" value="Instrument" class="userInput" /><br />
-			<input type="text" name="type" id="type" value="Tune Type" class="userInput" /><br />
-			<input type="text" name="datepicker" id="datepicker" value="Recorded Date" class="userInput" /><br />
-		</p>
+		<h3>metadata</h3>
+		<form method="POST" enctype="multipart/form-data" action="upload.php">
+			<p>
+				<input type="text" name="title" id="title" value="Tune Title" class="userInput" />
+					<?php echo $error_title; ?><br />
+				<input type="text" name="player" id="player" value="Player" class="userInput" /><br />
+				<input type="text" name="instrument" id="instrument" value="Instrument" class="userInput" /><br />
+				<input type="text" name="type" id="type" value="Tune Type" class="userInput" /><br />
+				<input type="text" name="datepicker" id="datepicker" value="Recorded Date" class="userInput" /><br />
+			</p>
 		
-		<h3>tags</h3>
-		<p>
-			<input type="text" name="tags" id="tags" value="Comma-delimited please!" class="userInput" size="50" />
-		</p>
+			<h3>tags</h3>
+			<p>
+				<input type="text" name="tags" id="tags" value="Comma-delimited please!" class="userInput" size="50" />
+			</p>
 	
-		<h3>audio files</h3>
-		<p>
-			<input type="file" name="audio1" id="audio1" onChange="$('#audio2').show(); $('#upload_submit').attr('disabled', false);" /> 
-				<?php echo $error_audio1; ?><br />
-			<input type="file" name="audio2"  id="audio2" onChange="$('#audio3').show()" style="display:none" /> <br />
-			<input type="file" name="audio3" id="audio3" onChange="$('#audio4').show()" style="display:none" /> <br />
-			<input type="file" name="audio4" id="audio4" onChange="$('#audio5').show()" style="display:none" /> <br />
-			<input type="file" name="audio5"  id="audio5" style="display:none" /> <br />
-			<input type="submit" id="upload_submit" disbled='disabled' />
-		</p>
-	</form>
+			<h3>audio files</h3>
+			<p>
+				<input type="file" name="audio1" id="audio1" onChange="$('#audio2').show(); $('#upload_submit').attr('disabled', false);" /> 
+					<?php echo $error_audio1; ?><br />
+				<input type="file" name="audio2"  id="audio2" onChange="$('#audio3').show()" style="display:none" /> <br />
+				<input type="file" name="audio3" id="audio3" onChange="$('#audio4').show()" style="display:none" /> <br />
+				<input type="file" name="audio4" id="audio4" onChange="$('#audio5').show()" style="display:none" /> <br />
+				<input type="file" name="audio5"  id="audio5" style="display:none" /> <br />
+				<input type="submit" id="upload_submit" disbled='disabled' />
+			</p>
+		</form>
 	
-	<a href="index.php">HOME</a>
+		<a href="index.php">HOME</a>
+	</div>
 	
 	<script>
 	sharedFunctions();

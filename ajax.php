@@ -89,6 +89,7 @@ if ($_GET['action'] == "search") {		// *****************************************
 	$tune_instrument = $row['tune_instrument'];
 	
 	echo "<span title='" . $tune_date . "\n" . $tune_player . "\n" . $tune_instrument . "'>" . $tune_title . "</span>";
+
 } else if ($_GET['action'] == 'tuneByDate') {		/* **************************** TUNE BY DATE ******************************** */
 	if (isset($_GET['d'])) {
 		$d = $_GET['d'];
