@@ -1,0 +1,143 @@
+<?php
+/* ***** ajax.php ***** */
+date_default_timezone_set('America/New_York');
+
+if ($_GET['action'] == "search") {		// ****************************************************** TUNES BY TAGS section *********
+	$tags =  $_GET['tags_list'];
+	$crap = array(',', ';');
+	$tags = str_replace($crap, " ", $tags);
+	$tags = htmlspecialchars($tags, ENT_QUOTES);
+	$tags = explode(" ", $tags);
+	$tags = array_filter($tags); // remove empty elemnts left over from punctuation and spaces
+
+	include('db_connect.php');
+	$list = array();
+
+	$total_tags = count($tags);
+	$hits = array();
+
+	foreach ($tags as $tag) {
+		$sql = "SELECT tags_tune_id FROM tp_tags WHERE tags_tag LIKE '%" . $tag . "%'";
+		$result = mysql_query($sql, $conn) or print "Oh no dude you fucked up. " . myqsl_error();
+		while ($tune_id = mysql_fetch_array($result, MYSQL_NUM)) {
+			array_push($list, $tune_id[0]);	
+			$hits[$tune_id[0]]++;		// This will show if ALL tags fit a tune, or just one or more
+		}
+		$list = array_unique($list);
+	}
+	
+	$out1 = "<div>Top Results:</div>";
+	$out2 = "<div onClick='$(\"#more_results\").toggle(\"slow\")' id='div_more_results' >More Results?</div><div id='more_results' style='display:none'>";
+	$count1 = 0;
+	$count2 = 0;
+	
+	foreach ($list as $id) {
+		$sql = "SELECT * FROM tp_tunes WHERE tune_id = " . $id;
+		$result = mysql_query($sql, $conn) or print "FUUUUUUCK " . mysql_error();
+		$tune_info = mysql_fetch_assoc($result);
+		
+		$datetime = explode(" ", $tune_info['tune_date']);	// discard time information ($datetime[1])
+		
+		$html = "<div><a href='#' onClick='load_tune(" . $id . ")' title='" . $tune_info['tune_player'] . ": " . $datetime[0] . "'>" . $tune_info['tune_title'] . "</a></div>";
+		if ($hits[$id] == $total_tags) {
+			$out1 .= $html; 
+			$count1++;
+		} else {
+			$out2 .= $html;
+			$count2++;
+		}
+	}
+	$count1 == 0 ? $out1 .="<div>No exact matches.</div>" : 1;
+	$count2 == 0 ? $out2 .="<div>No more results.</div>" : 1;
+	
+	$out2 .= "</div>";
+	
+	echo $out1;
+	echo $out2;
+	
+	include('db_close.php');
+	
+} else if ($_GET['action'] == 'loadTune') {		/* ************************************************** Load Tune (by id) ************ */
+	include('db_connect.php');
+	$sql = "SELECT tune_id FROM tp_tunes WHERE tune_id = '" . $_GET['id'] . "'";
+	$result = mysql_query($sql,$conn) or print "Balls dude, problems. " . mysql_error();
+	include('db_close.php');
+
+	$row = mysql_fetch_assoc($result);
+
+	$tune_id = $row['tune_id'];
+	
+	$exts = array("aiff", "webm", "ogg", "wav", "mp3");		// possible file extensions
+	foreach ($exts as $ext) {
+		if (file_exists("audio/" . $tune_id . "." . $ext)) {
+			echo "<source src='audio/" . $tune_id . "." . $ext . "' type='audio/" . $ext . "' />";
+		}
+	}
+} else if ($_GET['action'] == 'showTuneMetaData') {		/* ************************************** Show Tune Meta Shit (by id) ******* */
+	include('db_connect.php');
+	$sql = "SELECT tune_title, tune_date, tune_player, tune_instrument FROM tp_tunes WHERE tune_id = '" . $_GET['id'] . "'";
+	$result = mysql_query($sql,$conn) or print "Balls dude, problems. " . mysql_error();
+	include('db_close.php');
+
+	$row = mysql_fetch_assoc($result);
+	
+	$tune_title = $row['tune_title'];
+	$tune_datetime = $row['tune_date'];
+	$tune_datetime = explode(" ", $tune_datetime);
+	$tune_date = $tune_datetime[0];
+	$tune_player = $row['tune_player'];
+	$tune_instrument = $row['tune_instrument'];
+	
+	echo "<span title='" . $tune_date . "\n" . $tune_player . "\n" . $tune_instrument . "'>" . $tune_title . "</span>";
+
+} else if ($_GET['action'] == 'tuneByDate') {		/* **************************** TUNE BY DATE ******************************** */
+	if (isset($_GET['d'])) {
+		$d = $_GET['d'];
+	} else {
+		$d = date('Y-m-d H:i:m');
+	}
+	
+	if (isset($_GET['when'])) {
+		$operator = $_GET['when'] == 'prev' ? '<' : '>';
+		$desc_asc = $operator == '<' ? 'DESC' : 'ASC';
+	} else {
+		$operator = '<=';
+		$desc_asc = 'DESC';
+	}
+	
+	include('db_connect.php');
+	$sql = "SELECT tune_title, tune_id, tune_date FROM tp_tunes WHERE tune_date " . $operator . " '" . $d . "' ORDER BY tune_date " . $desc_asc . " LIMIT 1";
+	$res = mysql_query($sql, $conn) or print "OOOOOps problems. " . mysql_error();
+	include('db_close.php');
+	
+	if (mysql_num_rows($res) == 0) {
+		
+		echo "<div id='prev_load_next_buttons' class='no-shadow'>Oooops you&#39;ve reached the end of the line.<div id='tune_by_date_tune'><button onClick='tune_by_date()'>Start Over</button></div>";
+	} else {
+
+		$row = mysql_fetch_row($res);
+
+		$datetime = $row[2];
+		$datetime = explode(" ", $datetime);
+		$date = $datetime[0];
+
+		echo "<div id='prev_load_next_buttons'><button id='prev' onClick='tune_by_date(\"". $row[2] . "\", event)'>Prev</button> <button id='load_tune' onClick='load_tune(" . $row[1] . ")'>Load</button> <button id='next' onClick='tune_by_date(\"". $row[2] . "\", event)'>Next</button></div><span id='tune_by_date_tune' class='no-shadow'><span id='tune_by_date_tune_name'>" . $row[0] . "</span><span id='tune_by_date_tune_date'>" . $date . "</span></span>";
+	}
+} else if ($_GET['action'] == 'detect_chrome') {					// ******** Detect Google Chrome
+	if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') === false){
+		echo "false";
+	} else {
+		echo "true";
+	}
+}
+
+
+
+
+
+
+
+
+
+
+?>
