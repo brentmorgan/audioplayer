@@ -49,7 +49,7 @@ if ($_POST) {	/* ******************** PROECESS FORM ************************** *
 			$date = $_POST['datepicker'];
 			$date_parts = explode("/", $date);
 			$time = date('H:i:s');
-			$date = $date_parts[2] . "-" . $date_parts[1] . "-" . $date_parts[0] . " " . $time; // adds the current time just to have some
+			$date = $date_parts[2] . "-" . $date_parts[0] . "-" . $date_parts[1] . " " . $time; // adds the current time just to have some
 		}																			// time information so tunes on the same day be different
 		
 		$sql = "INSERT INTO tp_tunes (tune_title, tune_player, tune_instrument, tune_type, tune_date) VALUES ('" . htmlspecialchars($_POST['title'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['player'], ENT_QUOTES) . "', '". htmlspecialchars($_POST['instrument'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['type'], ENT_QUOTES) . "', '" . $date . "')";
